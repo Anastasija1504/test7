@@ -1,718 +1,257 @@
 <!doctype html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Сортувальник слів</title>
-  <style>
-    :root{
-      --bg:#f4f5f7;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --blue:#0a5fa5;
-      --blue2:#084c86;
-      --good:#16a34a;
-      --bad:#ef4444;
-      --shadow:0 10px 30px rgba(0,0,0,.08);
-      --radius:14px;
-    }
-    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
-    body{margin:0;background:var(--bg);color:var(--text)}
-    .topbar{
-      height:46px;background:#2f2f2f;color:#fff;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 14px;font-size:14px
-    }
-    .topbar .left, .topbar .right{display:flex;gap:16px;align-items:center}
-    .badge{display:inline-flex;align-items:center;gap:8px;opacity:.95}
-    .flag{width:10px;height:10px;border-radius:2px;background:#fff;display:inline-block;opacity:.8}
-    .content{max-width:900px;margin:0 auto;padding:16px}
-    h1,h2,h3{margin:0 0 10px}
-    .sub{color:var(--muted);margin:0 0 16px}
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-    }
-    .center{display:flex;flex-direction:column;align-items:center;gap:14px}
-    .titleline{
-      width:100%;
-      border-top:4px solid var(--blue);
-      margin:10px 0 0;
-    }
-    .prompt{
-      font-size:20px;font-weight:700;text-align:center;margin-top:6px
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гра — порядок слів</title>
 
-    .form{
-      width:min(520px, 100%);
-      display:grid;gap:12px;margin-top:10px
-    }
-    label{font-size:13px;color:var(--muted)}
-    input{
-      width:100%;
-      padding:12px 12px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      outline:none;
-      font-size:15px;
-      background:#fff;
-    }
-    input:focus{border-color:#b7d4ef; box-shadow:0 0 0 4px rgba(10,95,165,.12)}
-    .btn{
-      border:none;cursor:pointer;
-      padding:12px 16px;border-radius:12px;
-      background:var(--blue);color:#fff;font-weight:700;
-      font-size:14px;letter-spacing:.2px;
-      transition:transform .03s ease, background .15s ease;
-      display:inline-flex;align-items:center;justify-content:center;
-      min-width:160px;
-    }
-    .btn:hover{background:var(--blue2)}
-    .btn:active{transform:translateY(1px)}
-    .btn.secondary{
-      background:#111827;
-    }
-    .btn.secondary:hover{background:#0b1220}
-    .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-    .pill{
-      font-size:13px;color:#0b1220;background:#eef6ff;border:1px solid #d7e9ff;
-      padding:8px 10px;border-radius:999px
-    }
+<style>
+:root{
+  --bg:#f4f5f7;
+  --card:#fff;
+  --line:#e5e7eb;
+  --blue:#0a5fa5;
+  --good:#22c55e;
+  --bad:#ef4444;
+}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
+body{margin:0;background:var(--bg)}
 
-    .listWrap{width:min(520px, 100%); margin-top:6px}
-    .list{
-      list-style:none;padding:0;margin:0;
-      border:1px solid var(--line);
-      border-radius:12px; overflow:hidden;
-      background:#fff;
-    }
-    .item{
-      padding:12px 14px;
-      border-top:1px solid var(--line);
-      display:flex;align-items:center;justify-content:center;
-      font-weight:700;
-      user-select:none;
-      touch-action:none;
-      position:relative;
-      background:#fff;
-    }
-    .item:first-child{border-top:none}
-    .item[aria-grabbed="true"]{
-      box-shadow:0 10px 22px rgba(0,0,0,.14);
-      border:1px solid #cfe6ff;
-      z-index:50;
-    }
-    .hint{font-size:13px;color:var(--muted);text-align:center;margin-top:6px}
+.topbar{
+  height:46px;background:#2f2f2f;color:#fff;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 14px;font-size:14px
+}
+.content{max-width:900px;margin:auto;padding:16px}
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08)
+}
+.center{display:flex;flex-direction:column;align-items:center;gap:14px}
+.btn{
+  padding:12px 18px;
+  border-radius:12px;
+  border:none;
+  background:var(--blue);
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+}
+input{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  font-size:15px;
+}
+.list{
+  list-style:none;
+  padding:0;margin:0;
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+}
+.item{
+  padding:18px 14px;              /* ⬅ більше для телефону */
+  font-size:18px;
+  font-weight:700;
+  text-align:center;
+  border-top:1px solid var(--line);
+  background:#fff;
+  touch-action:none;
+  user-select:none;
+}
+.item:first-child{border-top:none}
 
-    .countdown{
-      font-size:46px;font-weight:900;line-height:1;
-      margin:6px 0 0;
-    }
-    .status{
-      margin-top:10px;
-      font-size:14px;
-      font-weight:700;
-      padding:10px 12px;border-radius:12px;
-      border:1px solid var(--line);
-      background:#fafafa;
-      width:min(520px, 100%);
-      text-align:center;
-    }
-    .status.good{border-color:#bbf7d0;background:#f0fdf4;color:#14532d}
-    .status.bad{border-color:#fecaca;background:#fef2f2;color:#7f1d1d}
+/* підсвітка */
+.item.good{background:#dcfce7;color:#14532d}
+.item.bad{background:#fee2e2;color:#7f1d1d}
 
-    .small{font-size:12px;color:var(--muted)}
-    .divider{height:1px;background:var(--line);width:100%;margin:8px 0}
-    .summary{
-      width:min(620px,100%);
-      display:grid;gap:8px;
-    }
-    .kv{
-      display:flex;justify-content:space-between;gap:12px;
-      padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff
-    }
-    .kv b{font-weight:800}
-    .footerNote{color:var(--muted);font-size:12px;text-align:center;margin-top:6px}
-
-    /* placeholder spacing similar to video */
-    .spacer{height:6px}
-  </style>
+/* drag */
+.item.dragging{
+  position:fixed;
+  z-index:1000;
+  box-shadow:0 12px 25px rgba(0,0,0,.2);
+}
+</style>
 </head>
+
 <body>
-  <div class="topbar">
-    <div class="left">
-      <div class="badge">✓ <span id="scoreTop">Бали: 0</span></div>
-    </div>
-    <div class="right">
-      <div class="badge"><span class="flag"></span><span id="lvlTop">Рівень: 0 / 5</span></div>
-    </div>
-  </div>
+<div class="topbar">
+  <div id="scoreTop">Бали: 0</div>
+  <div id="lvlTop">Рівень: 0 / 5</div>
+</div>
 
-  <div class="content">
-    <div class="card">
-      <div style="font-weight:800;font-size:18px">Відсортуйте слова</div>
-      <div class="titleline"></div>
+<div class="content">
+<div class="card">
 
-      <!-- SCREENS -->
-      <div id="screenStart" class="center" style="margin-top:14px">
-        <div class="prompt">Введіть дані для старту</div>
-        <p class="sub">Після початку буде 5 рівнів: 3 → 7 слів. Час проходження не обмежений.</p>
+<!-- START -->
+<div id="start" class="center">
+  <h2>Початок гри</h2>
+  <input id="name" placeholder="Ім’я">
+  <input id="email" placeholder="Пошта">
+  <button class="btn" id="startBtn">Почати гру</button>
+</div>
 
-        <div class="form">
-          <div>
-            <label for="name">Ім’я</label>
-            <input id="name" type="text" placeholder="Наприклад: Анастасія" autocomplete="name" />
-          </div>
-          <div>
-            <label for="email">Пошта</label>
-            <input id="email" type="email" placeholder="name@example.com" autocomplete="email" />
-          </div>
-          <button id="btnStart" class="btn">Почати гру</button>
-          <div class="small">Нічого зайвого — тільки старт.</div>
-        </div>
-      </div>
+<!-- GAME -->
+<div id="game" class="center" style="display:none">
+  <h2 id="title">Запамʼятайте слова</h2>
+  <div id="timer" style="font-size:42px;font-weight:800">8</div>
 
-      <div id="screenGame" class="center" style="display:none; margin-top:14px">
-        <div class="prompt" id="phaseTitle">Запам’ятайте порядок слів</div>
+  <ul id="list" class="list"></ul>
 
-        <div class="row">
-          <div class="pill" id="pillLevel">Рівень 1 / 5</div>
-          <div class="pill" id="pillWords">Слів: 3</div>
-        </div>
+  <button class="btn" id="checkBtn" style="display:none">Перевірити</button>
+</div>
 
-        <div id="countdownBox" class="center" style="gap:6px">
-          <div class="countdown" id="countdown">8</div>
-          <div class="small">Слова зникнуть автоматично</div>
-        </div>
+<!-- END -->
+<div id="end" class="center" style="display:none">
+  <h2>Результат</h2>
+  <div id="summary"></div>
+  <button class="btn" onclick="location.reload()">Почати знову</button>
+</div>
 
-        <div class="listWrap">
-          <ul id="wordList" class="list" aria-label="Список слів"></ul>
-          <div class="hint" id="hint">Під час запам’ятовування перетягування вимкнене.</div>
-        </div>
-
-        <div class="row" style="margin-top:10px">
-          <button id="btnCheck" class="btn" style="display:none">Перевірити</button>
-        </div>
-
-        <div id="status" class="status" style="display:none"></div>
-      </div>
-
-      <div id="screenEnd" class="center" style="display:none; margin-top:14px">
-        <div class="prompt">Результат</div>
-        <p class="sub" id="endSub">Готово!</p>
-
-        <div class="summary" id="summary"></div>
-
-        <div class="row" style="margin-top:8px">
-          <button id="btnRestart" class="btn secondary">Почати знову</button>
-        </div>
-
-        <div class="footerNote">Дякуємо за гру 💙💛</div>
-      </div>
-    </div>
-  </div>
+</div>
+</div>
 
 <script>
-/* =======================
-   НАЛАШТУВАННЯ TELEGRAM
-   ======================= */
-const BOT_TOKEN = "8517397402:AAERo7gAWPoCyCKpx9_T6b4tZRQazAZrX1k";
-const CHAT_ID   = "1350269784";
+/* TELEGRAM */
+const BOT_TOKEN="8517397402:AAERo7gAWPoCyCKpx9_T6b4tZRQazAZrX1k";
+const CHAT_ID="1350269784";
 
-/* =======================
-   ЛОГІКА ГРИ
-   ======================= */
-const LEVEL_SIZES = [3,4,5,6,7];
-const MEM_SECONDS = 8; // час на запам'ятовування (автоматично)
-
-// Пул українських слів (без повторів у рівні)
-const WORD_POOL = [
-  "калина","світло","весна","мрія","вітрила","дзвін","небо","ріка","ліс","хвиля",
-  "зірка","пісня","крила","пам’ять","жовтень","сонях","вишня","стежка","тепло","сміх",
-  "дружба","сила","надія","вогник","серце","камінь","ранок","вечір","квітка","криниця",
-  "вікно","дорога","струмок","пиріг","школа","книга","олівець","місто","садок","площа",
-  "берег","вишиванка","кобзар","мандрівка","веселка","тиша","погляд","пульс","тривога","спокій",
-  "планета","вчитель","учень","команда","успіх","підказка","екран","кнопка","рядок","пазл"
+/* GAME DATA */
+const LEVELS=[3,4,5,6,7];
+const WORDS=[
+"калина","небо","ріка","зірка","весна","мрія","пісня","ліс","хвиля",
+"сонях","стежка","тепло","світло","надія","книга","місто","сад","вікно"
 ];
 
-// DOM
-const el = (id)=>document.getElementById(id);
+let level=0, score=0;
+let correct=[], startTime=0;
 
-const screenStart = el("screenStart");
-const screenGame  = el("screenGame");
-const screenEnd   = el("screenEnd");
+/* DOM */
+const startScr=start, gameScr=game, endScr=end;
+const list=document.getElementById("list");
+const timer=document.getElementById("timer");
+const title=document.getElementById("title");
+const checkBtn=document.getElementById("checkBtn");
 
-const scoreTop = el("scoreTop");
-const lvlTop   = el("lvlTop");
-
-const phaseTitle = el("phaseTitle");
-const pillLevel  = el("pillLevel");
-const pillWords  = el("pillWords");
-
-const countdownBox = el("countdownBox");
-const countdownEl  = el("countdown");
-const wordListEl   = el("wordList");
-const hintEl       = el("hint");
-const btnCheck     = el("btnCheck");
-const statusEl     = el("status");
-
-const nameEl  = el("name");
-const emailEl = el("email");
-const btnStart = el("btnStart");
-
-const summaryEl = el("summary");
-const endSubEl  = el("endSub");
-const btnRestart = el("btnRestart");
-
-// State
-let player = { name:"", email:"" };
-let startTimeMs = 0;
-
-let levelIndex = 0;
-let score = 0;
-
-let correctOrder = [];
-let currentOrder = [];
-let perLevel = []; // {level, size, correctPositions, scoreAdd}
-
-let countdownTimer = null;
-let countdownLeft = MEM_SECONDS;
-
-function nowMs(){ return Date.now(); }
-
-function formatTime(ms){
-  const s = Math.floor(ms/1000);
-  const hh = Math.floor(s/3600);
-  const mm = Math.floor((s%3600)/60);
-  const ss = s%60;
-  const pad = (n)=>String(n).padStart(2,"0");
-  return (hh>0 ? `${hh}:${pad(mm)}:${pad(ss)}` : `${mm}:${pad(ss)}`);
-}
-
-function setTop(){
-  scoreTop.textContent = `Бали: ${score}`;
-  lvlTop.textContent = `Рівень: ${Math.min(levelIndex+1,5)} / 5`;
-}
-
-function showScreen(which){
-  screenStart.style.display = which==="start" ? "flex" : "none";
-  screenGame.style.display  = which==="game"  ? "flex" : "none";
-  screenEnd.style.display   = which==="end"   ? "flex" : "none";
-}
-
-function pickWords(count, avoidSet){
-  // avoidSet: Set слів, які вже брали (щоб по можливості не повторювати між рівнями)
-  const pool = WORD_POOL.filter(w => !avoidSet.has(w));
-  const src = (pool.length >= count) ? pool : WORD_POOL.slice(); // якщо не вистачає — дозволяємо повтори
-  // shuffle
-  for(let i=src.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [src[i],src[j]]=[src[j],src[i]];
-  }
-  return src.slice(0,count);
-}
-
-function renderList(words){
-  wordListEl.innerHTML = "";
-  for(const w of words){
-    const li = document.createElement("li");
-    li.className = "item";
-    li.textContent = w.toUpperCase();
-    wordListEl.appendChild(li);
-  }
-}
-
-/* =======================
-   SORTABLE (DESKTOP+MOBILE)
-   Pointer-based reorder
-   ======================= */
-let drag = {
-  active:false,
-  item:null,
-  startY:0,
-  currentY:0,
-  offsetY:0,
-  placeholder:null,
-  listRect:null
+/* START */
+startBtn.onclick=()=>{
+  if(!name.value||!email.value)return;
+  startScr.style.display="none";
+  gameScr.style.display="flex";
+  startTime=Date.now();
+  nextLevel();
 };
 
-function getItems(){
-  return Array.from(wordListEl.querySelectorAll(".item"));
-}
+function nextLevel(){
+  document.getElementById("lvlTop").textContent=`Рівень: ${level+1} / 5`;
+  title.textContent="Запамʼятайте порядок слів";
+  checkBtn.style.display="none";
+  list.innerHTML="";
+  timer.style.display="block";
+  let count=8;
+  timer.textContent=count;
 
-function enableDrag(enable){
-  for(const it of getItems()){
-    it.style.pointerEvents = enable ? "auto" : "none";
-  }
-}
+  correct=shuffle(WORDS).slice(0,LEVELS[level]);
+  correct.forEach(w=>addItem(w));
 
-function indexOfNode(node){
-  return Array.from(wordListEl.children).indexOf(node);
-}
-
-function createPlaceholder(height){
-  const ph = document.createElement("li");
-  ph.className = "item";
-  ph.style.opacity = "0";
-  ph.style.height = height + "px";
-  ph.style.borderTop = "1px solid var(--line)";
-  ph.textContent = " ";
-  return ph;
-}
-
-function onPointerDown(e){
-  const target = e.target.closest(".item");
-  if(!target || btnCheck.style.display==="none") return; // drag only in sorting phase
-  e.preventDefault();
-
-  drag.active = true;
-  drag.item = target;
-  drag.listRect = wordListEl.getBoundingClientRect();
-  const r = target.getBoundingClientRect();
-
-  drag.startY = e.clientY;
-  drag.offsetY = e.clientY - r.top;
-
-  target.setAttribute("aria-grabbed","true");
-  target.style.width = r.width + "px";
-  target.style.position = "fixed";
-  target.style.left = r.left + "px";
-  target.style.top = r.top + "px";
-
-  drag.placeholder = createPlaceholder(r.height);
-  wordListEl.insertBefore(drag.placeholder, target.nextSibling);
-
-  // move item out of flow
-  wordListEl.removeChild(target);
-  document.body.appendChild(target);
-
-  document.addEventListener("pointermove", onPointerMove, {passive:false});
-  document.addEventListener("pointerup", onPointerUp, {passive:false, once:true});
-}
-
-function onPointerMove(e){
-  if(!drag.active) return;
-  e.preventDefault();
-
-  const y = e.clientY - drag.offsetY;
-  drag.item.style.top = y + "px";
-
-  // decide placeholder position
-  const items = Array.from(wordListEl.querySelectorAll(".item"));
-  const ph = drag.placeholder;
-
-  // if list is empty, just append placeholder
-  if(items.length===0){
-    wordListEl.appendChild(ph);
-    return;
-  }
-
-  // find closest insertion point by y center
-  let insertBefore = null;
-  for(const it of items){
-    if(it === ph) continue;
-    const rect = it.getBoundingClientRect();
-    const mid = rect.top + rect.height/2;
-    if(e.clientY < mid){
-      insertBefore = it;
-      break;
+  const t=setInterval(()=>{
+    count--;
+    timer.textContent=count;
+    if(count===0){
+      clearInterval(t);
+      startSort();
     }
-  }
-  if(insertBefore){
-    if(ph !== insertBefore.previousSibling){
-      wordListEl.insertBefore(ph, insertBefore);
-    }
-  }else{
-    wordListEl.appendChild(ph);
-  }
+  },1000);
 }
 
-function onPointerUp(e){
-  document.removeEventListener("pointermove", onPointerMove);
-  if(!drag.active) return;
-
-  drag.active = false;
-
-  const ph = drag.placeholder;
-  const item = drag.item;
-
-  // put item back into list at placeholder
-  item.style.position = "relative";
-  item.style.left = "0px";
-  item.style.top = "0px";
-  item.style.width = "auto";
-  item.removeAttribute("aria-grabbed");
-
-  document.body.removeChild(item);
-  wordListEl.insertBefore(item, ph);
-  wordListEl.removeChild(ph);
-
-  drag.item = null;
-  drag.placeholder = null;
-  drag.listRect = null;
+function startSort(){
+  title.textContent="Відновіть порядок слів";
+  timer.style.display="none";
+  list.innerHTML="";
+  shuffle(correct).forEach(w=>addItem(w));
+  checkBtn.style.display="block";
+  enableDrag();
 }
 
-wordListEl.addEventListener("pointerdown", onPointerDown, {passive:false});
-
-/* =======================
-   PHASES
-   ======================= */
-function startLevel(){
-  setTop();
-
-  const size = LEVEL_SIZES[levelIndex];
-  pillLevel.textContent = `Рівень ${levelIndex+1} / 5`;
-  pillWords.textContent = `Слів: ${size}`;
-
-  statusEl.style.display = "none";
-  statusEl.className = "status";
-  btnCheck.style.display = "none";
-
-  phaseTitle.textContent = "Запам’ятайте порядок слів";
-  hintEl.textContent = "Під час запам’ятовування перетягування вимкнене.";
-
-  countdownBox.style.display = "flex";
-  countdownLeft = MEM_SECONDS;
-  countdownEl.textContent = countdownLeft;
-
-  // choose words
-  const used = new Set(perLevel.flatMap(x => x.words || []));
-  correctOrder = pickWords(size, used);
-  currentOrder = correctOrder.slice();
-
-  // show correct order for memorization
-  renderList(correctOrder);
-  enableDrag(false);
-
-  // run countdown
-  clearInterval(countdownTimer);
-  countdownTimer = setInterval(()=>{
-    countdownLeft--;
-    countdownEl.textContent = countdownLeft;
-    if(countdownLeft<=0){
-      clearInterval(countdownTimer);
-      beginSortingPhase();
-    }
-  }, 1000);
-}
-
-function shuffleArray(a){
-  const arr = a.slice();
-  for(let i=arr.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
-  }
-  return arr;
-}
-
-function beginSortingPhase(){
-  phaseTitle.textContent = "Відновіть порядок слів";
-  hintEl.textContent = "Перетягніть слова, щоб відновити порядок, і натисніть «Перевірити».";
-
-  // shuffle, but avoid same order
-  let shuffled = shuffleArray(correctOrder);
-  let guard = 0;
-  while(shuffled.join("|") === correctOrder.join("|") && guard<8){
-    shuffled = shuffleArray(correctOrder);
-    guard++;
-  }
-
-  renderList(shuffled);
-  enableDrag(true);
-
-  countdownBox.style.display = "none";
-  btnCheck.style.display = "inline-flex";
-}
-
-function getCurrentWordsFromUI(){
-  return Array.from(wordListEl.children).map(li => li.textContent.toLowerCase());
-}
-
-function computeScoreForLevel(order){
-  // +5 балів за кожну позицію, що співпала
-  let correct = 0;
-  for(let i=0;i<correctOrder.length;i++){
-    if(order[i] === correctOrder[i]) correct++;
-  }
-  return { correctPositions: correct, scoreAdd: correct*5 };
-}
-
-function checkLevel(){
-  const order = getCurrentWordsFromUI();
-  const {correctPositions, scoreAdd} = computeScoreForLevel(order);
-
-  score += scoreAdd;
-  setTop();
-
-  const size = correctOrder.length;
-
-  // status
-  statusEl.style.display = "block";
-  if(correctPositions === size){
-    statusEl.className = "status good";
-    statusEl.textContent = `✅ Чудово! Усе правильно. +${scoreAdd} балів`;
-  }else if(correctPositions === 0){
-    statusEl.className = "status bad";
-    statusEl.textContent = `❌ Не співпала жодна позиція. +0 балів`;
-  }else{
-    statusEl.className = "status";
-    statusEl.textContent = `ℹ️ Правильних позицій: ${correctPositions} з ${size}. +${scoreAdd} балів`;
-  }
-
-  perLevel.push({
-    level: levelIndex+1,
-    size,
-    correctPositions,
-    scoreAdd,
-    words: correctOrder.slice()
-  });
-
-  btnCheck.style.display = "none";
-  enableDrag(false);
-
-  // next after short pause
-  setTimeout(()=>{
-    levelIndex++;
-    if(levelIndex < LEVEL_SIZES.length){
-      startLevel();
+/* CHECK */
+checkBtn.onclick=()=>{
+  const items=[...list.children];
+  let ok=0;
+  items.forEach((el,i)=>{
+    if(el.textContent===correct[i]){
+      el.classList.add("good");
+      ok++;
     }else{
-      finishGame();
+      el.classList.add("bad");
     }
-  }, 900);
+  });
+  score+=ok*5;
+  scoreTop.textContent=`Бали: ${score}`;
+
+  setTimeout(()=>{
+    level++;
+    if(level<LEVELS.length) nextLevel();
+    else finish();
+  },900);
+};
+
+/* END */
+function finish(){
+  gameScr.style.display="none";
+  endScr.style.display="flex";
+  const time=Math.round((Date.now()-startTime)/1000);
+  summary.innerHTML=`Бали: <b>${score}</b><br>Час: ${time} с`;
+
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=`+
+    encodeURIComponent(`🧠 Гра зі словами\n${name.value}\n${email.value}\nБали: ${score}\nЧас: ${time} с`),
+    {mode:"no-cors"});
 }
 
-/* =======================
-   END + TELEGRAM
-   ======================= */
-function buildSummary(){
-  summaryEl.innerHTML = "";
-  const totalMs = nowMs() - startTimeMs;
-  const totalWords = perLevel.reduce((s,x)=>s+x.size,0);
-  const totalCorrectPositions = perLevel.reduce((s,x)=>s+x.correctPositions,0);
-  const accuracy = totalWords ? Math.round((totalCorrectPositions/totalWords)*100) : 0;
-
-  const rows = [
-    ["Ім’я", player.name],
-    ["Пошта", player.email],
-    ["Підсумкові бали", String(score)],
-    ["Точність (позиції)", `${accuracy}% (${totalCorrectPositions}/${totalWords})`],
-    ["Час проходження", formatTime(totalMs)]
-  ];
-
-  for(const [k,v] of rows){
-    const div = document.createElement("div");
-    div.className = "kv";
-    div.innerHTML = `<span>${k}</span><b>${escapeHtml(v)}</b>`;
-    summaryEl.appendChild(div);
-  }
-
-  // per-level breakdown
-  const d = document.createElement("div");
-  d.className = "divider";
-  summaryEl.appendChild(d);
-
-  for(const x of perLevel){
-    const div = document.createElement("div");
-    div.className = "kv";
-    div.innerHTML = `<span>Рівень ${x.level} (слів: ${x.size})</span><b>${x.correctPositions}/${x.size} • +${x.scoreAdd}</b>`;
-    summaryEl.appendChild(div);
-  }
-
-  endSubEl.textContent = "Готово! Нижче — ваш підсумок.";
+/* HELPERS */
+function addItem(t){
+  const li=document.createElement("li");
+  li.className="item";
+  li.textContent=t;
+  list.appendChild(li);
+}
+function shuffle(a){
+  return a.slice().sort(()=>Math.random()-.5);
 }
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
+/* MOBILE DRAG */
+function enableDrag(){
+  let dragEl=null, startY=0;
+  list.querySelectorAll(".item").forEach(el=>{
+    el.onpointerdown=e=>{
+      dragEl=el;
+      startY=e.clientY;
+      el.classList.add("dragging");
+      document.onpointermove=ev=>{
+        const dy=ev.clientY-startY;
+        el.style.transform=`translateY(${dy}px)`;
+        const rect=el.getBoundingClientRect();
+        [...list.children].forEach(other=>{
+          if(other!==el){
+            const r=other.getBoundingClientRect();
+            if(rect.top<r.top+r.height/2){
+              list.insertBefore(el,other);
+            }
+          }
+        });
+      };
+      document.onpointerup=()=>{
+        el.classList.remove("dragging");
+        el.style.transform="";
+        document.onpointermove=null;
+      };
+    };
+  });
 }
-
-function sendToTelegram(){
-  // У браузері Telegram API часто без CORS. Тому шлемо як no-cors (запит піде, відповідь не читаємо).
-  const totalMs = nowMs() - startTimeMs;
-  const totalWords = perLevel.reduce((s,x)=>s+x.size,0);
-  const totalCorrectPositions = perLevel.reduce((s,x)=>s+x.correctPositions,0);
-  const accuracy = totalWords ? Math.round((totalCorrectPositions/totalWords)*100) : 0;
-
-  const details = perLevel.map(x => `Р${x.level}: ${x.correctPositions}/${x.size} (+${x.scoreAdd})`).join(" | ");
-
-  const msg =
-`🧠 Сортувальник слів — результат
-👤 Ім’я: ${player.name}
-📧 Пошта: ${player.email}
-⭐ Бали: ${score}
-🎯 Точність: ${accuracy}% (${totalCorrectPositions}/${totalWords})
-⏱ Час: ${formatTime(totalMs)}
-📋 ${details}`;
-
-  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(CHAT_ID)}&text=${encodeURIComponent(msg)}`;
-
-  try{
-    fetch(url, { method:"GET", mode:"no-cors" }).catch(()=>{});
-  }catch(e){
-    // fallback: create img request
-    const img = new Image();
-    img.src = url;
-  }
-}
-
-function finishGame(){
-  showScreen("end");
-  buildSummary();
-  sendToTelegram();
-}
-
-/* =======================
-   START/RESTART
-   ======================= */
-btnStart.addEventListener("click", ()=>{
-  const name = nameEl.value.trim();
-  const email = emailEl.value.trim();
-
-  if(!name){
-    nameEl.focus();
-    return;
-  }
-  if(!email || !/^\S+@\S+\.\S+$/.test(email)){
-    emailEl.focus();
-    return;
-  }
-
-  player.name = name;
-  player.email = email;
-
-  // reset state
-  levelIndex = 0;
-  score = 0;
-  perLevel = [];
-  startTimeMs = nowMs();
-
-  setTop();
-  showScreen("game");
-  startLevel();
-});
-
-btnCheck.addEventListener("click", checkLevel);
-
-btnRestart.addEventListener("click", ()=>{
-  // reset UI to start (без зайвого)
-  clearInterval(countdownTimer);
-  nameEl.value = player.name || "";
-  emailEl.value = player.email || "";
-  score = 0;
-  levelIndex = 0;
-  perLevel = [];
-  setTop();
-  showScreen("start");
-});
-
-// initial top
-setTop();
 </script>
 </body>
 </html>
